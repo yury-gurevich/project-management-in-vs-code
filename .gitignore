@@ -1,0 +1,20 @@
+# Local project state — every consumer of this skill will gitignore these in their own repo
+# (the skill's /bootstrap command ensures that). For the skill repo itself, we only ignore
+# build byproducts.
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Python artifacts (if test harness grows)
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
