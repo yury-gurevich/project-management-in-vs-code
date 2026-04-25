@@ -1,24 +1,25 @@
 #!/usr/bin/env bash
-# Install the project-log skill into ~/.claude/skills/ so it's visible in every Claude session.
+# Copies the project-log skill + its 6 slash-command siblings to ~/.claude/skills/
 set -euo pipefail
 
-REPO_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
-SOURCE="$REPO_ROOT/.claude/skills/project-log"
-DEST="${HOME}/.claude/skills/project-log"
+SKILL_NAMES=(project-log where roadmap idea bootstrap replan ship)
+REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+SKILLS_SRC="$REPO_ROOT/.claude/skills"
+TARGET="$HOME/.claude/skills"
 
-if [[ ! -d "$SOURCE" ]]; then
-    echo "ERROR: skill source not found at $SOURCE" >&2
-    exit 1
-fi
+mkdir -p "$TARGET"
+echo "Source: $SKILLS_SRC"
+echo "Target: $TARGET"
 
-mkdir -p "$(dirname "$DEST")"
-
-if [[ -d "$DEST" ]]; then
-    read -rp "Destination $DEST exists. Overwrite? (y/N) " ans
-    [[ "$ans" == "y" ]] || { echo "Aborted."; exit 0; }
-    rm -rf "$DEST"
-fi
-
-cp -r "$SOURCE" "$DEST"
-echo "Installed to $DEST"
-echo "Restart your Claude session to pick up the new skill."
+for name in "${SKILL_NAMES[@]}"; do
+    src="$SKILLS_SRC/$name"
+    dst="$TARGET/$name"
+    if [[ ! -d "$src" ]]; then
+        echo "  [!] skipping $name — not found"
+        continue
+    fi
+    rm -rf "$dst"
+    cp -R "$src" "$dst"
+    echo "  [+] $name"
+done
+echo "Done. Restart your Claude Code session."

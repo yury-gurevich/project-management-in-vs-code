@@ -144,30 +144,30 @@ Users can expand to a richer scale (e.g., the 0-5 scale the trading-system PRD u
 ## 6. Skill Structure
 
 ```
-project-log/
-├── SKILL.md                      main entry; triggers on session start
-├── README.md                     install instructions for the user
-├── templates/
-│   ├── PRD.md                    PRD template with maturity scale skeleton
-│   ├── completion-plan.md        stage list template
-│   ├── STATE.md                  state file template
-│   ├── sprint-loop.md            sprint-loop with config frontmatter
-│   ├── progress-report.md        in-flight progress template
-│   └── CLAUDE.md                 project-level Claude pointer template
-└── commands/                     nested skills; invocable as slash commands
-    ├── where/SKILL.md            "you are here" view with drift reconciliation
-    ├── roadmap/SKILL.md          one-page strategic progress view
-    ├── idea/SKILL.md             parking-lot capture to ideas.md
-    ├── bootstrap/SKILL.md        conversational PRD intake + scaffold generation
-    ├── replan/SKILL.md           structured revision of the PRD with change log
-    └── ship/SKILL.md             ship protocol: commit, delete progress, update STATE
+.claude/skills/
+├── project-log/                  main skill — doctrine + session-start behavior
+│   ├── SKILL.md                  triggers when the user asks status-type questions
+│   ├── README.md                 install instructions
+│   └── templates/                shared by the command skills
+│       ├── PRD.md                PRD template with maturity scale skeleton
+│       ├── completion-plan.md    stage list template
+│       ├── STATE.md              state file template
+│       ├── sprint-loop.md        sprint-loop with config frontmatter
+│       ├── progress-report.md    in-flight progress template
+│       └── CLAUDE.md             project-level Claude pointer template
+├── where/SKILL.md                /where — "you are here" with drift reconciliation
+├── roadmap/SKILL.md              /roadmap — one-page strategic view
+├── idea/SKILL.md                 /idea — parking-lot capture to ideas.md
+├── bootstrap/SKILL.md            /bootstrap — conversational PRD intake + scaffold
+├── replan/SKILL.md               /replan — structured PRD revision with change log
+└── ship/SKILL.md                 /ship — ship protocol: quality gate, merge, cleanup
 ```
 
 ### 6.1 Invocation
 
 - **Main SKILL.md** auto-triggers when Claude opens the repo and the skill is installed.
-- **Nested skills** invoke as slash commands (`/where`, `/roadmap`, `/idea`, `/bootstrap`, `/replan`, `/ship`).
-- Per the Claude Code documentation, nested skills are the recommended path for slash-command-style behaviors — they work consistently across Cowork, Claude Code CLI, and Claude Desktop.
+- **Sibling skills** invoke as slash commands (`/where`, `/roadmap`, `/idea`, `/bootstrap`, `/replan`, `/ship`).
+- Each slash command is a top-level sibling skill, which is what Cowork's skill loader expects — they work consistently across Cowork, Claude Code CLI, and Claude Desktop.
 
 ---
 
@@ -318,7 +318,7 @@ project-log/
   - `docs/PRD-v2.md` (trading-system) — PRD structure
   - `docs/sprint-loop.md` (trading-system) — sprint loop shape
   - `docs/local/STATE.md` (trading-system) — state file shape
-  - `.claude/commands/where.md`, `roadmap.md`, `idea.md` — slash-command behaviors (reimplemented as nested skills)
+  - `.claude/commands/where.md`, `roadmap.md`, `idea.md` — slash-command behaviors (each a top-level sibling skill)
   - `.claude/agents/sprint-ship.md` — closeout agent structure
 
 ---

@@ -18,3 +18,7 @@ __pycache__/
 *.pyc
 .pytest_cache/
 .venv/
+
+# Consumer state — always local
+docs/local/
+

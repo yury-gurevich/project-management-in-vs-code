@@ -44,14 +44,14 @@ before moving to the next. Keep it natural.
 
 1. **Summarize back to the user.** Read back your understanding in ~10 lines. Ask for corrections.
    Loop until they say "yes, that's right."
-2. **Draft `docs/PRD.md`** from `templates/PRD.md`. Fill every placeholder. Use the mandatory
+2. **Draft `docs/PRD.md`** from `../project-log/templates/PRD.md`. Fill every placeholder. Use the mandatory
    3-level maturity scale by default. Use Phases A, B, C for the roadmap.
-3. **Draft `docs/local/completion-plan-<today>.md`** from `templates/completion-plan.md`.
+3. **Draft `docs/local/completion-plan-<today>.md`** from `../project-log/templates/completion-plan.md`.
    Decompose Phase A into stages A1, A2, A3 (aim for 3–6 stages in Phase A).
-4. **Create `docs/sprint-loop.md`** from `templates/sprint-loop.md`. Fill in the quality-gate
+4. **Create `docs/sprint-loop.md`** from `../project-log/templates/sprint-loop.md`. Fill in the quality-gate
    commands for the user's stack. If unsure, leave the command as `"<fill in>"` with a comment.
-5. **Create `docs/local/STATE.md`** from `templates/STATE.md`. Seed Now with stage A1.
-6. **Create `CLAUDE.md`** at the repo root from `templates/CLAUDE.md`.
+5. **Create `docs/local/STATE.md`** from `../project-log/templates/STATE.md`. Seed Now with stage A1.
+6. **Create `CLAUDE.md`** at the repo root from `../project-log/templates/CLAUDE.md`.
 7. **Create `docs/local/.gitignore`-ready structure:** ensure `docs/local/` is in the repo's
    `.gitignore`. Add a line if missing.
 8. **Report** to the user: one line per file created, plus a "next step" line:

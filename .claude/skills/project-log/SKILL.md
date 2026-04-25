@@ -71,7 +71,7 @@ Run this check in order before touching any code:
 5. If no mismatch → read the Now sprint's progress file and continue from there.
 6. If no `docs/PRD.md` exists at all → prompt the user to run `/bootstrap`.
 
-## Commands (nested skills)
+## Commands (sibling skills)
 
 | Command | What it does |
 |---|---|
@@ -82,7 +82,9 @@ Run this check in order before touching any code:
 | `/replan` | Structured revision of the PRD with change-log entry + completion-plan regen |
 | `/ship` | Ship protocol — quality gate, push, merge, checkpoint, delete progress, update STATE |
 
-Each command is a nested skill at `.claude/skills/project-log/commands/<name>/SKILL.md`.
+Each command is a top-level skill at `.claude/skills/<name>/SKILL.md`, living as a sibling of
+`project-log/` so Cowork exposes it as a real slash command. Templates they read live
+at `.claude/skills/project-log/templates/`.
 
 ## Filename conventions (enforced)
 
