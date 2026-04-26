@@ -77,19 +77,22 @@ Project-log:   2026-04-23T19:45Z  A3  shipped   readiness self-recovery → chec
 
 Run this check in order before touching any code:
 
-1. Read `docs/local/STATE.md` if it exists.
-2. Read the **tail of `docs/local/project-log.md`** (last ~20 entries).
-3. Read the tail of the active per-effort progress file (last ~30 lines), if one exists.
-4. Run `git status --short`, `git branch --show-current`, `git log --oneline -5`.
-5. Reconcile. Mismatch patterns:
+1. Read `memory/MEMORY.md` (sibling of this SKILL.md). If non-empty, fetch the entries that look
+   relevant to what the user is doing — `feedback` and active `project` entries first; `user` and
+   `reference` only when the topic warrants it.
+2. Read `docs/local/STATE.md` if it exists.
+3. Read the **tail of `docs/local/project-log.md`** (last ~20 entries).
+4. Read the tail of the active per-effort progress file (last ~30 lines), if one exists.
+5. Run `git status --short`, `git branch --show-current`, `git log --oneline -5`.
+6. Reconcile. Mismatch patterns:
    - Current branch differs from the latest project-log `started` entry that hasn't been `shipped` yet → flag
    - Uncommitted changes on a branch the project-log marks as already shipped → flag
    - No progress file exists for the Now sprint, but project-log shows it as still active → flag
    - Project-log latest entry > 3 days old (likely missing milestone capture) → flag
    - STATE.md disagrees with the project-log tail → regenerate STATE.md and warn
-6. If any mismatch → surface it and block new work until reconciled or explicitly overridden.
-7. If no mismatch → report the resume cursor (last "Next:" line of the active progress file) and continue.
-8. If no `docs/PRD.md` exists at all → prompt the user to run `/bootstrap`.
+7. If any mismatch → surface it and block new work until reconciled or explicitly overridden.
+8. If no mismatch → report the resume cursor (last "Next:" line of the active progress file) and continue.
+9. If no `docs/PRD.md` exists at all → prompt the user to run `/bootstrap`.
 
 ## Commands (sibling skills)
 
@@ -127,6 +130,37 @@ docs/local/ideas.md                                                  # gitignore
 
 `docs/sprint-loop.md` has a YAML frontmatter block the skill reads to adapt to any stack. See
 `templates/sprint-loop.md` for the canonical shape. Edit the frontmatter; leave the body alone.
+
+## Memory
+
+The skill carries cross-session memory at `memory/MEMORY.md` (sibling of this SKILL.md). It uses
+the same 4-type taxonomy as harness auto-memory (`user`, `feedback`, `project`, `reference`) so
+agents already familiar with one understand both. See [`memory/README.md`](memory/README.md) for
+the full conventions.
+
+**When to write a memory entry** — any of these:
+
+- The user gives `feedback` (correction OR validated success): "stop summarizing every diff" or
+  "yeah, the bundled commit was the right call." Capture the rule + Why + How to apply.
+- A `project` fact lands that won't be obvious from re-reading the code/PRD later: a freeze
+  date, a stakeholder constraint, a why-we-did-this-the-weird-way decision. Use absolute dates.
+- A `user` detail surfaces that should shape future explanations: their role, what stack
+  they're new to, how they like progress reported.
+- A `reference` to an external system gets named: a Linear project, a Slack channel, a Grafana
+  board.
+
+**When NOT to write** — code patterns, architecture, file paths (re-derivable), git history
+(use `git log`/`blame`), debugging fixes (the fix is in the code), anything already in
+CLAUDE.md or the PRD.
+
+**How to write** — copy `memory/_TEMPLATE.md` to a new `<type>_<topic>.md` file in the memory
+dir, fill in frontmatter + body, then add a one-line index entry to `memory/MEMORY.md`. Two
+steps; both required. Personal entries are gitignored — they never ship with the skill.
+
+**Relationship to harness auto-memory** — when the harness has its own memory (Claude Code does),
+treat the two as parallel. Harness memory wins for general user context that spans skills;
+in-skill memory captures discipline-specific knowledge that belongs with this skill regardless
+of harness.
 
 ## What this skill is NOT
 

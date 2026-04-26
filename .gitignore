@@ -19,6 +19,13 @@ __pycache__/
 .pytest_cache/
 .venv/
 
-# Consumer state — always local
+# Consumer state ï¿½ always local
 docs/local/
+
+# Skill memory â€” personal entries are per-install, never shipped.
+# Track only the scaffold (README, _TEMPLATE, MEMORY.md header).
+.claude/skills/*/memory/*.md
+!.claude/skills/*/memory/README.md
+!.claude/skills/*/memory/_TEMPLATE.md
+!.claude/skills/*/memory/MEMORY.md
 
