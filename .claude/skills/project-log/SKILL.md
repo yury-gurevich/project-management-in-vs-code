@@ -80,7 +80,15 @@ Run this check in order before touching any code:
 1. Read `memory/MEMORY.md` (sibling of this SKILL.md). If non-empty, fetch the entries that look
    relevant to what the user is doing — `feedback` and active `project` entries first; `user` and
    `reference` only when the topic warrants it.
-2. Read `docs/local/STATE.md` if it exists.
+2. Read `docs/local/STATE.md` if it exists. **Multi-repo defensive check**: if STATE.md has a
+   `**Repo root:**` header field, compare its value (case-insensitive on Windows, forward-slash
+   normalized, no trailing slash) against the live `git rev-parse --show-toplevel`. If they
+   differ, **stop immediately** — do not read further state, do not write anything. Surface the
+   mismatch in a structured drift block with both paths and a remediation hint ("if you moved
+   the repo intentionally, update the Repo root line in STATE.md and re-run; otherwise you may
+   be looking at the wrong project's state"). This pattern is hard-refuse, not warn-and-continue,
+   because acting on the wrong repo's state corrupts both. If STATE.md exists but has no Repo
+   root field, treat as a soft warning (file predates the C3 check) and continue.
 3. Read the **tail of `docs/local/project-log.md`** (last ~20 entries).
 4. Read the tail of the active per-effort progress file (last ~30 lines), if one exists.
 5. Run `git status --short`, `git branch --show-current`, `git log --oneline -5`.

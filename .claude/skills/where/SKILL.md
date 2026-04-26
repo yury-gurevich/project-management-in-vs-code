@@ -30,6 +30,10 @@ Produce a compact block showing:
    - `git status --short | head -20`
    - `git log --oneline -5`
 5. Reconcile. Mismatch patterns to flag:
+   - **Wrong-repo refuse (HARD)** — STATE.md's `Repo root` field doesn't match
+     `git rev-parse --show-toplevel` (case-insensitive, slash-normalized). This is a hard refuse
+     — emit the mismatch block and stop. Do not regenerate STATE, do not produce the standard
+     `── where ──` block. The session is in the wrong repo (or STATE.md is from another repo).
    - **Branch mismatch** — current branch differs from the latest project-log `started` entry
      that hasn't been `shipped` yet
    - **Stale progress** — project-log marks a stage active but no progress file exists for it
@@ -37,6 +41,8 @@ Produce a compact block showing:
    - **Stale project-log** — latest entry is more than 3 days old (likely missing milestones)
    - **STATE drift** — STATE.md's Now disagrees with the project-log tail
    - **No clean cursor** — active progress file's last entry has no `Next:` line
+   - **Missing Repo root field (SOFT)** — STATE.md exists but has no `**Repo root:**` header line
+     (predates C3). Note this once in the output; suggest the user add the line. Do not refuse.
 6. If **STATE drift** is the only mismatch, regenerate STATE.md's Now and Shipped sections from
    the project-log tail + active progress file (this is the *only* file write `/where` ever performs;
    warn the user that hand-edits to those sections will be overwritten). For all other mismatches,

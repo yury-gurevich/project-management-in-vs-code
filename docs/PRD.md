@@ -1,6 +1,6 @@
 # PRD: `project-log` Skill
 
-**Version:** 1.1 (skill package v0.4)
+**Version:** 1.1 (skill package v0.5)
 **Date:** 2026-04-26
 **Status:** Approved — Phase C (v1.0 readiness) in progress
 **Owner:** Yury Gurevich
@@ -384,13 +384,16 @@ Resolved in skill package v0.4 (Phase C):
 
 - **Q (was Q3):** Persistent agent memory for the skill — does the skill itself need a memory dir (like sprint-ship has)? **Resolved (C2, 2026-04-26):** yes. The skill ships a `memory/` directory at `.claude/skills/project-log/memory/` with a 4-type taxonomy (user / feedback / project / reference) mirroring harness auto-memory exactly. Scaffold (README, _TEMPLATE, empty MEMORY.md) ships with the skill; personal entries are gitignored so they never leak across consumers. See `memory/README.md` for conventions.
 
+Resolved in skill package v0.5 (Phase C):
+
+- **Q (was Q3 post-C2):** Multi-repo handling — should the skill actively detect and refuse to share state across repos? **Resolved (C3, 2026-04-26):** yes. STATE.md grows a `**Repo root:**` header field, filled by `/bootstrap` with `git rev-parse --show-toplevel`. Main `project-log/SKILL.md` session-start hard-refuses on mismatch (case-insensitive, slash-normalized comparison); STATE.md files predating C3 (no field present) get a soft warning instead. `/where` mismatch list includes the new pattern as **Wrong-repo refuse (HARD)**.
+
 Still open for v1.x:
 
 1. **Existing projects without a PRD** — how does the skill handle them? Offer reverse-engineering from code + git history, or require manual PRD creation? *Lean: offer both modes during bootstrap; reverse-engineer is best-effort and always requires user approval.* (Tracked as C5.)
 2. **Ideas parking lot integration with completion plan** — when a parked idea graduates to a committed stage, does the skill do that automatically or only via `/replan`? *Lean: only via `/replan`; automation here would undermine the discipline.*
-3. **Multi-repo handling** — one repo = one project per user decision, but does the skill need to actively detect and refuse to share state across repos? *Lean: defensive check on session start — if STATE.md references a repo root that doesn't match `git rev-parse --show-toplevel`, flag and refuse.* (Tracked as C3.)
-4. **Project-log size** — at what point (file size, line count, or age) does `/roadmap` switch from "summarize the whole log" to "summarize the last N entries"? *Lean: switch at 500 lines or 6 months, whichever comes first; older entries summarized via stage-grouped roll-up.* (Tracked as C6.)
-5. **Auto-trigger collisions** — when two skills could plausibly fire on the same phrasing (e.g., "let's plan the next thing" — `/replan` or just generic next-stage selection?), how does the agent disambiguate? *Lean: defer to the most-specific description match; if tied, ask one clarifying question before acting.*
+3. **Project-log size** — at what point (file size, line count, or age) does `/roadmap` switch from "summarize the whole log" to "summarize the last N entries"? *Lean: switch at 500 lines or 6 months, whichever comes first; older entries summarized via stage-grouped roll-up.* (Tracked as C6.)
+4. **Auto-trigger collisions** — when two skills could plausibly fire on the same phrasing (e.g., "let's plan the next thing" — `/replan` or just generic next-stage selection?), how does the agent disambiguate? *Lean: defer to the most-specific description match; if tied, ask one clarifying question before acting.*
 
 ---
 
@@ -431,6 +434,7 @@ This PRD is approved when the user:
 
 ## 13. Revision Log
 
+- **2026-04-26 — C3 (skill package v0.5).** Closed open question Q3 (multi-repo handling). STATE.md template (`templates/STATE.md`) now ships a `**Repo root:**` header field. `/bootstrap` fills it on creation with `git rev-parse --show-toplevel`. Main `project-log/SKILL.md` session-start step 2 reads the field and hard-refuses (does not regenerate STATE, does not surface other state) when it mismatches the live `git rev-parse --show-toplevel`; missing field is a soft warning (backwards-compatible with pre-C3 STATE.md files). `/where`'s mismatch-pattern list grows two entries: **Wrong-repo refuse (HARD)** and **Missing Repo root field (SOFT)**. §9 reorganized: Q3 (renumbered post-C2) moved to "Resolved in skill package v0.5"; remaining open questions renumbered. Reason: prevent corrupting one repo's state by mistakenly reading another's `docs/local/` — false negatives here are catastrophic.
 - **2026-04-26 — C2 (skill package v0.4).** Closed open question Q3 (persistent agent memory for the skill). Added `memory/` directory to the skill structure (§6) with the 4-type taxonomy mirroring harness auto-memory: `user`, `feedback`, `project`, `reference`. Scaffold ships with the skill (README, _TEMPLATE, empty MEMORY.md header); personal entries are gitignored within the skill repo so they don't leak between installs. Main `project-log/SKILL.md` session-start now reads `memory/MEMORY.md` first, before STATE.md and the project-log tail. Added a "Memory" section to the SKILL.md describing the when-to-write rules, the when-NOT-to-write list, and the parallel relationship with harness auto-memory. §9 reorganized: Q3 moved to a new "Resolved in skill package v0.4" sub-section; remaining open questions renumbered. Reason: portability — skill should carry discipline-specific knowledge across sessions even on harnesses without their own memory layer.
 - **2026-04-26 — C4 (skill package v0.3).** Closed open question Q2 (maturity scale granularity). PRD template `templates/PRD.md` §7 now ships both scales explicitly: the 3-level default visible, the 5-level expansion in a commented block with "pick one" wording and switch-later instructions. §9 reorganized: Q2 moved to a new "Resolved in skill package v0.3" sub-section; remaining open questions renumbered and cross-referenced to their tracking stages (C2, C3, C5, C6). Reason: dogfood of the skill on its own repo surfaced that the template already had the 5-level option but the PRD said it was open; closing the loop.
 - **2026-04-25 — v1.1 (skill package v0.2).** Introduced the lifetime `docs/local/project-log.md` artifact (§5.1, §5.3) and the new `log` sibling skill (§6, §7.7). Defined the tail-of-file resume convention (§5.4). Demoted STATE.md to a derived view regenerated by `/where` (§5.5). Updated principles 2, 4, 5; added principles 8 (auto-trigger over slash-typing) and 9 (coding agent owns milestone capture). Updated Bootstrap (§7.1), Sprint Execution (§7.2), Ship (§7.3), Drift Check (§7.4), Progress Reports (§7.5), Replan (§7.6) to read from / write to project-log. Added success measures PL-G7 (auto-trigger reliability) and PL-G8 (milestone density). Resolved 3 open questions; added 2 new ones (project-log size, auto-trigger collisions). Reason: user feedback that (a) per-effort logging IS the append-target, (b) coding agent must own milestones, (c) skills must auto-trigger from natural phrasing.
@@ -438,4 +442,4 @@ This PRD is approved when the user:
 
 ---
 
-*End of PRD v1.1 / project-log v0.4.*
+*End of PRD v1.1 / project-log v0.5.*

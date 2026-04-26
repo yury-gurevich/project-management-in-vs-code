@@ -57,6 +57,10 @@ before moving to the next. Keep it natural.
    ```
    (No stage yet — bootstrap precedes A1; the dash is fine in the stage column for this one entry.)
 6. **Create `docs/local/STATE.md`** from `../project-log/templates/STATE.md`. Seed Now with stage A1.
+   Fill the **Repo root** header field with the output of `git rev-parse --show-toplevel`
+   (forward slashes, no trailing slash). This is the multi-repo defensive check value — it lets
+   session-start refuse to operate when STATE.md is mistakenly read from a different repo's
+   `docs/local/`.
 7. **Create `CLAUDE.md`** at the repo root from `../project-log/templates/CLAUDE.md`.
 8. **Create `docs/local/.gitignore`-ready structure:** ensure `docs/local/` is in the repo's
    `.gitignore`. Add a line if missing.

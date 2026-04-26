@@ -1,11 +1,17 @@
 # STATE
 
+**Repo root:** `<absolute path from `git rev-parse --show-toplevel` at bootstrap time>`
 **Last updated:** <YYYY-MM-DD HH:MM> (by Claude)
 **How to read:** this file is a **derived snapshot** of "what is active right now," regenerated
 by `/where` from `docs/local/project-log.md` (canonical history) plus the active per-effort
 progress file (resume cursor). The Now and Shipped sections will be overwritten on the next
 `/where` or `/ship`; hand-edit only if you intend to override the derived view temporarily.
 The Next, Parked, and Pointers sections are user-maintained.
+
+The **Repo root** field is the multi-repo defensive check: at session start, the skill compares
+this value against the live `git rev-parse --show-toplevel` and refuses to operate on mismatch.
+That prevents accidentally treating one repo's STATE/project-log as another's. If you've
+intentionally moved or renamed the repo dir, update this line by hand and continue.
 
 ---
 
