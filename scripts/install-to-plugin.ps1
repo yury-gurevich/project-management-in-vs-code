@@ -1,6 +1,7 @@
 # install-to-plugin.ps1
-# Copies the project-log skill + its 6 slash-command siblings into your Cowork plugin skills folder
-# so /where, /roadmap, /idea, /bootstrap, /replan, /ship register as real slash commands.
+# Copies the project-log skill + its 7 slash-command siblings into your Cowork plugin skills folder
+# so /where, /roadmap, /idea, /bootstrap, /replan, /ship, /log register as real slash commands.
+# Preserves personal memory entries on reinstall (only scaffold files are overwritten).
 #
 # Usage (from the repo root):
 #   pwsh ./scripts/install-to-plugin.ps1
@@ -13,8 +14,8 @@ $repoRoot  = Split-Path -Parent $PSScriptRoot
 $skillsSrc = Join-Path $repoRoot ".claude\skills"
 $pluginDir = Join-Path $env:APPDATA "Claude\local-agent-mode-sessions\skills-plugin"
 
-# The 7 skills this repo ships
-$skillNames = @("project-log", "where", "roadmap", "idea", "bootstrap", "replan", "ship")
+# The 8 skills this repo ships
+$skillNames = @("project-log", "where", "roadmap", "idea", "bootstrap", "replan", "ship", "log")
 
 if (-not (Test-Path $skillsSrc)) { Write-Error "Skills source not found at $skillsSrc"; exit 1 }
 if (-not (Test-Path $pluginDir)) { Write-Error "Cowork plugin folder not found at $pluginDir. Is Cowork installed?"; exit 1 }
@@ -45,8 +46,10 @@ foreach ($name in $skillNames) {
     $src = Join-Path $skillsSrc $name
     $dst = Join-Path $target $name
     if (-not (Test-Path $src)) { Write-Warning "Skipping $name — source not found at $src"; continue }
-    if (Test-Path $dst) { Remove-Item -Recurse -Force $dst }
-    Copy-Item -Recurse -Path $src -Destination $dst
+    # Merge-copy (do NOT Remove-Item $dst): -Force overwrites same-named files,
+    # leaves everything else (e.g. user's personal memory/<type>_*.md entries) untouched.
+    if (-not (Test-Path $dst)) { New-Item -ItemType Directory -Force -Path $dst | Out-Null }
+    Copy-Item -Recurse -Force -Path (Join-Path $src "*") -Destination $dst
     Write-Host "  [+] $name"
 }
 
