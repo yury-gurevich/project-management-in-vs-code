@@ -34,7 +34,12 @@ recorded — no quiet edits.
      needed — gitignored).
    - Create a new `docs/local/completion-plan-<today>.md` reflecting the new plan.
 6. **Update `docs/local/STATE.md` Next queue** to match the new plan. Do NOT touch the Now section.
-7. **Report** to the user:
+7. **Append a `replan` entry to `docs/local/project-log.md`** in the canonical format:
+   ```
+   <YYYY-MM-DDThh:mmZ>  <current-stage-or-—>  replan   <one-line summary of change>  → PRD §<section>
+   ```
+   The current stage is whatever STATE.md Now is on; if Now is empty, use `—`.
+8. **Report** to the user:
    - Which PRD sections changed
    - Completion plan archived + new one created (if applicable)
    - STATE.md Next queue updated

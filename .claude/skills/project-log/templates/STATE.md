@@ -1,8 +1,11 @@
 # STATE
 
 **Last updated:** <YYYY-MM-DD HH:MM> (by Claude)
-**How to read:** this file is the single source of truth for *what is active right now*. Read it
-at session start. Update it at every transition (start a branch, merge, park, ship).
+**How to read:** this file is a **derived snapshot** of "what is active right now," regenerated
+by `/where` from `docs/local/project-log.md` (canonical history) plus the active per-effort
+progress file (resume cursor). The Now and Shipped sections will be overwritten on the next
+`/where` or `/ship`; hand-edit only if you intend to override the derived view temporarily.
+The Next, Parked, and Pointers sections are user-maintained.
 
 ---
 
@@ -46,6 +49,7 @@ Durable references (don't change often):
 
 - **PRD:** `docs/PRD.md`
 - **Completion plan:** `docs/local/completion-plan-<YYYY-MM-DD>.md`
+- **Project log (canonical history):** `docs/local/project-log.md`
 - **Sprint loop:** `docs/sprint-loop.md`
 - **Ideas parking lot:** `docs/local/ideas.md`
 - **Runbooks:** `docs/local/` (gitignored)

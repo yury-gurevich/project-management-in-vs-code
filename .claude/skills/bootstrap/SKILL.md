@@ -50,11 +50,17 @@ before moving to the next. Keep it natural.
    Decompose Phase A into stages A1, A2, A3 (aim for 3–6 stages in Phase A).
 4. **Create `docs/sprint-loop.md`** from `../project-log/templates/sprint-loop.md`. Fill in the quality-gate
    commands for the user's stack. If unsure, leave the command as `"<fill in>"` with a comment.
-5. **Create `docs/local/STATE.md`** from `../project-log/templates/STATE.md`. Seed Now with stage A1.
-6. **Create `CLAUDE.md`** at the repo root from `../project-log/templates/CLAUDE.md`.
-7. **Create `docs/local/.gitignore`-ready structure:** ensure `docs/local/` is in the repo's
+5. **Create `docs/local/project-log.md`** from `../project-log/templates/project-log.md`. Append
+   the first entry below the `## Log` header:
+   ```
+   <YYYY-MM-DDThh:mmZ>  —   bootstrap  project initialized from PRD v1
+   ```
+   (No stage yet — bootstrap precedes A1; the dash is fine in the stage column for this one entry.)
+6. **Create `docs/local/STATE.md`** from `../project-log/templates/STATE.md`. Seed Now with stage A1.
+7. **Create `CLAUDE.md`** at the repo root from `../project-log/templates/CLAUDE.md`.
+8. **Create `docs/local/.gitignore`-ready structure:** ensure `docs/local/` is in the repo's
    `.gitignore`. Add a line if missing.
-8. **Report** to the user: one line per file created, plus a "next step" line:
+9. **Report** to the user: one line per file created, plus a "next step" line:
    `next step: open a Claude session, say "start A1", and begin your first sprint.`
 
 ## Principles

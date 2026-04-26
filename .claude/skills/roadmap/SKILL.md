@@ -17,7 +17,9 @@ Produce a compact block covering the whole project.
 1. Read in order:
    - `docs/PRD.md` — extract vision (one line), Phases A/B/C/…, success measures
    - `docs/local/completion-plan-*.md` (most recent) — extract stage list
-   - `docs/local/STATE.md` — extract Now, Next, Parked, Shipped counts
+   - `docs/local/project-log.md` (full file, or last 200 entries if longer) — extract `started`,
+     `shipped`, `blocker`, `unblock`, `replan`, `parked` counts; this is the durable history
+   - `docs/local/STATE.md` — extract Now, Next, Parked sections (cross-check against project-log)
    - `docs/local/ideas.md` — count entries
 2. Run `git tag --list 'checkpoint-*' | wc -l` and `git log --oneline --grep='^ship:' | wc -l` for ship count.
 3. Estimate sprints-remaining as: total stages in completion plan minus stages already shipped.

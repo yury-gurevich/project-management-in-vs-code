@@ -45,18 +45,29 @@ to the project's toolchain via that file's YAML frontmatter.
      (e.g. `checkpoint-20260424-readiness-recovery`)
    - Backup branch: `<backup_branch_convention>` pointing at the just-merged default-branch HEAD
 9. **Push tag and backup branch.**
-10. **Final ship commit.** On `<default_branch>`, commit a message of the form:
+10. **Distil per-effort progress to the project-log.** Before deleting the progress file, read
+    its full contents and summarize its arc into one line. Append to `docs/local/project-log.md`:
+    ```
+    <YYYY-MM-DDThh:mmZ>  <stage>  shipped   <one-line summary>  → <checkpoint-tag>
+    ```
+    The summary should capture what landed and why it mattered — not the tactics. This is the
+    durable record; the progress file is about to disappear. Idempotency-check: if the same
+    `<stage>  shipped` line already exists in the log tail, do not append again.
+11. **Final ship commit.** On `<default_branch>`, commit a message of the form:
     `ship: <stage>: <summary>`
     This commit may be empty (`git commit --allow-empty`) — its purpose is to mark the stage as
-    complete in history and trigger the progress file deletion.
-11. **Delete progress file(s).** `rm docs/local/progress/<hash>-*-<stage>-*.md`.
-12. **Cleanup branches.** Delete local and remote feature branch.
-13. **Empty temp.** `rm -rf docs/local/temp/*` if it exists.
-14. **Update `docs/local/STATE.md`:**
-    - Move Now entry into `Shipped this month` with tag, commit sha, date.
-    - If completion plan has a next stage, move it into Now. Otherwise leave Now empty.
+    complete in history.
+12. **Delete progress file(s).** `rm docs/local/progress/<hash>-*-<stage>-*.md`. The project-log
+    entry from step 10 is now the durable record.
+13. **Cleanup branches.** Delete local and remote feature branch.
+14. **Empty temp.** `rm -rf docs/local/temp/*` if it exists.
+15. **Regenerate `docs/local/STATE.md`** from the project-log tail:
+    - Now: clear, or seed from the next stage in the completion plan.
+    - Shipped this month: rebuild from project-log `shipped` entries within the last 30 days.
     - Update `Last updated` timestamp.
-15. **Report.** One paragraph: what was shipped, tag name, version (if bumped), what's next.
+    (This is the same regeneration `/where` does on STATE drift.)
+16. **Report.** One paragraph: what was shipped, tag name, version (if bumped), what's next.
+    Prompt the user to pick the next stage from the Next queue.
 
 ## Principles
 
