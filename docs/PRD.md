@@ -1,8 +1,8 @@
 # PRD: `project-log` Skill
 
-**Version:** 1.1 (skill package v0.2)
-**Date:** 2026-04-25
-**Status:** Approved — v0.2 build in progress
+**Version:** 1.1 (skill package v0.3)
+**Date:** 2026-04-26
+**Status:** Approved — Phase C (v1.0 readiness) in progress
 **Owner:** Yury Gurevich
 **Grounded in:** `project_log_study_findings.md` (2026-04-24)
 **Revision Log:** see §13.
@@ -365,21 +365,24 @@ Users can expand to a richer scale (e.g., the 0-5 scale the trading-system PRD u
 
 ## 9. Open Questions
 
-Resolved in v1.1 (this revision):
+Resolved in v1.1:
 
 - **Q (was open):** Should the agent's resume cursor be a separate marker, footer comment, or just the tail of the per-effort progress file? **Resolved:** tail-of-file is the cursor. See §5.4.
 - **Q (was open):** Should milestones live in STATE.md, in per-effort progress files, or in a separate log? **Resolved:** lifetime `docs/local/project-log.md` for milestones; per-effort progress for sprint detail; STATE.md becomes a derived view.
 - **Q (was open):** Is the user expected to invoke skills by slash command? **Resolved:** no — auto-trigger is the primary surface (principle 8). Slash commands are shortcuts.
 
+Resolved in skill package v0.3 (Phase C):
+
+- **Q (was Q2):** Maturity scale granularity — should the template include a commented-out 5-level option? **Resolved (C4, 2026-04-26):** yes. Template now ships the 3-level default plus a commented-out 5-level expansion with explicit "pick one" wording and switch-later instructions. See `templates/PRD.md` §7.
+
 Still open for v1.x:
 
-1. **Existing projects without a PRD** — how does the skill handle them? Offer reverse-engineering from code + git history, or require manual PRD creation? *Lean: offer both modes during bootstrap; reverse-engineer is best-effort and always requires user approval.*
-2. **Maturity scale granularity** — the 3-level default is documented; should the template also include commented-out 5-level rows so users can expand by uncommenting? *Lean: yes.*
-3. **Ideas parking lot integration with completion plan** — when a parked idea graduates to a committed stage, does the skill do that automatically or only via `/replan`? *Lean: only via `/replan`; automation here would undermine the discipline.*
-4. **Persistent agent memory for the skill** — does the skill itself need a memory dir (like sprint-ship has)? *Lean: yes; mirror trading-system's 4-type taxonomy (user / feedback / project / reference).*
-5. **Multi-repo handling** — one repo = one project per user decision, but does the skill need to actively detect and refuse to share state across repos? *Lean: defensive check on session start — if STATE.md references a repo root that doesn't match `git rev-parse --show-toplevel`, flag and refuse.*
-6. **Project-log size** — at what point (file size, line count, or age) does `/roadmap` switch from "summarize the whole log" to "summarize the last N entries"? *Lean: switch at 500 lines or 6 months, whichever comes first; older entries summarized via stage-grouped roll-up.*
-7. **Auto-trigger collisions** — when two skills could plausibly fire on the same phrasing (e.g., "let's plan the next thing" — `/replan` or just generic next-stage selection?), how does the agent disambiguate? *Lean: defer to the most-specific description match; if tied, ask one clarifying question before acting.*
+1. **Existing projects without a PRD** — how does the skill handle them? Offer reverse-engineering from code + git history, or require manual PRD creation? *Lean: offer both modes during bootstrap; reverse-engineer is best-effort and always requires user approval.* (Tracked as C5.)
+2. **Ideas parking lot integration with completion plan** — when a parked idea graduates to a committed stage, does the skill do that automatically or only via `/replan`? *Lean: only via `/replan`; automation here would undermine the discipline.*
+3. **Persistent agent memory for the skill** — does the skill itself need a memory dir (like sprint-ship has)? *Lean: yes; mirror trading-system's 4-type taxonomy (user / feedback / project / reference).* (Tracked as C2.)
+4. **Multi-repo handling** — one repo = one project per user decision, but does the skill need to actively detect and refuse to share state across repos? *Lean: defensive check on session start — if STATE.md references a repo root that doesn't match `git rev-parse --show-toplevel`, flag and refuse.* (Tracked as C3.)
+5. **Project-log size** — at what point (file size, line count, or age) does `/roadmap` switch from "summarize the whole log" to "summarize the last N entries"? *Lean: switch at 500 lines or 6 months, whichever comes first; older entries summarized via stage-grouped roll-up.* (Tracked as C6.)
+6. **Auto-trigger collisions** — when two skills could plausibly fire on the same phrasing (e.g., "let's plan the next thing" — `/replan` or just generic next-stage selection?), how does the agent disambiguate? *Lean: defer to the most-specific description match; if tied, ask one clarifying question before acting.*
 
 ---
 
@@ -420,9 +423,10 @@ This PRD is approved when the user:
 
 ## 13. Revision Log
 
+- **2026-04-26 — C4 (skill package v0.3).** Closed open question Q2 (maturity scale granularity). PRD template `templates/PRD.md` §7 now ships both scales explicitly: the 3-level default visible, the 5-level expansion in a commented block with "pick one" wording and switch-later instructions. §9 reorganized: Q2 moved to a new "Resolved in skill package v0.3" sub-section; remaining open questions renumbered and cross-referenced to their tracking stages (C2, C3, C5, C6). Reason: dogfood of the skill on its own repo surfaced that the template already had the 5-level option but the PRD said it was open; closing the loop.
 - **2026-04-25 — v1.1 (skill package v0.2).** Introduced the lifetime `docs/local/project-log.md` artifact (§5.1, §5.3) and the new `log` sibling skill (§6, §7.7). Defined the tail-of-file resume convention (§5.4). Demoted STATE.md to a derived view regenerated by `/where` (§5.5). Updated principles 2, 4, 5; added principles 8 (auto-trigger over slash-typing) and 9 (coding agent owns milestone capture). Updated Bootstrap (§7.1), Sprint Execution (§7.2), Ship (§7.3), Drift Check (§7.4), Progress Reports (§7.5), Replan (§7.6) to read from / write to project-log. Added success measures PL-G7 (auto-trigger reliability) and PL-G8 (milestone density). Resolved 3 open questions; added 2 new ones (project-log size, auto-trigger collisions). Reason: user feedback that (a) per-effort logging IS the append-target, (b) coding agent must own milestones, (c) skills must auto-trigger from natural phrasing.
 - **2026-04-24 — v1.0 draft.** Initial PRD grounded in `project_log_study_findings.md`.
 
 ---
 
-*End of PRD v1.1 / project-log v0.2.*
+*End of PRD v1.1 / project-log v0.3.*

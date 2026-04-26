@@ -71,7 +71,12 @@ so it can be referenced in commits and progress reports. Example: AUTH-01, AUTH-
 
 ## 7. Maturity Scale
 
-**Default 3-level scale** (keep this unless the project grows complex enough to need more):
+Pick **one** of the two scales below. The 3-level default is the right choice for most projects;
+the 5-level expansion is for projects where "in progress" is too coarse to track meaningfully
+(e.g. multi-month projects with many partially-built workstreams). You can switch later — just
+re-rate every workstream in §8 against the new scale and note it in the Revision Log.
+
+**Default — 3-level scale** (keep this unless the project clearly needs more granularity):
 
 | Level | Meaning |
 |---|---|
@@ -80,12 +85,13 @@ so it can be referenced in commits and progress reports. Example: AUTH-01, AUTH-
 | 2 | Done |
 
 <!--
-Optional 5-level scale — uncomment if the project needs finer progress tracking.
+**Optional — 5-level scale.** To use it: delete the 3-level table above, then uncomment this
+block (remove the surrounding `<!--` and `-->` markers). Re-rate every workstream in §8.
 
 | Level | Meaning |
 |---|---|
 | 0 | Not started |
-| 1 | Prototype — exists but not usable |
+| 1 | Prototype — exists but not usable end-to-end |
 | 2 | Usable end-to-end but not polished |
 | 3 | Polished and tested |
 | 4 | Observed and stable in the target environment |
