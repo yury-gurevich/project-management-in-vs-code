@@ -89,7 +89,9 @@ Run this check in order before touching any code:
    be looking at the wrong project's state"). This pattern is hard-refuse, not warn-and-continue,
    because acting on the wrong repo's state corrupts both. If STATE.md exists but has no Repo
    root field, treat as a soft warning (file predates the C3 check) and continue.
-3. Read the **tail of `docs/local/project-log.md`** (last ~20 entries).
+3. Read the **tail of `docs/local/project-log.md`** (last ~20 entries). This is the policy
+   regardless of file size — for full-history rendering use `/roadmap`, which switches to
+   roll-up mode automatically when the log crosses 500 lines or 6 months.
 4. Read the tail of the active per-effort progress file (last ~30 lines), if one exists.
 5. Run `git status --short`, `git branch --show-current`, `git log --oneline -5`.
 6. Reconcile. Mismatch patterns:

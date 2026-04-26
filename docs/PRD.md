@@ -1,6 +1,6 @@
 # PRD: `project-log` Skill
 
-**Version:** 1.1 (skill package v0.5)
+**Version:** 1.1 (skill package v0.6)
 **Date:** 2026-04-26
 **Status:** Approved — Phase C (v1.0 readiness) in progress
 **Owner:** Yury Gurevich
@@ -388,12 +388,15 @@ Resolved in skill package v0.5 (Phase C):
 
 - **Q (was Q3 post-C2):** Multi-repo handling — should the skill actively detect and refuse to share state across repos? **Resolved (C3, 2026-04-26):** yes. STATE.md grows a `**Repo root:**` header field, filled by `/bootstrap` with `git rev-parse --show-toplevel`. Main `project-log/SKILL.md` session-start hard-refuses on mismatch (case-insensitive, slash-normalized comparison); STATE.md files predating C3 (no field present) get a soft warning instead. `/where` mismatch list includes the new pattern as **Wrong-repo refuse (HARD)**.
 
+Resolved in skill package v0.6 (Phase C):
+
+- **Q (was Q3 post-C3):** Project-log size — at what point does `/roadmap` switch from full to summary mode? **Resolved (C6, 2026-04-26):** at **500 lines OR 6 months**, whichever comes first. `/roadmap` then runs in **roll-up mode**: split the log so the last 30 days OR last 50 entries (whichever covers more) render in full detail, while older entries compress to one line per stage (shipped one-liners + decision/blocker counts; `note` entries and matched `blocker`/`unblock` pairs aggregated, not enumerated; most recent `replan` reason kept as a footnote). Project-log itself stays append-only forever (principle 4) — roll-up is purely a render transformation. See `roadmap/SKILL.md` for the full output format and compression rules.
+
 Still open for v1.x:
 
 1. **Existing projects without a PRD** — how does the skill handle them? Offer reverse-engineering from code + git history, or require manual PRD creation? *Lean: offer both modes during bootstrap; reverse-engineer is best-effort and always requires user approval.* (Tracked as C5.)
 2. **Ideas parking lot integration with completion plan** — when a parked idea graduates to a committed stage, does the skill do that automatically or only via `/replan`? *Lean: only via `/replan`; automation here would undermine the discipline.*
-3. **Project-log size** — at what point (file size, line count, or age) does `/roadmap` switch from "summarize the whole log" to "summarize the last N entries"? *Lean: switch at 500 lines or 6 months, whichever comes first; older entries summarized via stage-grouped roll-up.* (Tracked as C6.)
-4. **Auto-trigger collisions** — when two skills could plausibly fire on the same phrasing (e.g., "let's plan the next thing" — `/replan` or just generic next-stage selection?), how does the agent disambiguate? *Lean: defer to the most-specific description match; if tied, ask one clarifying question before acting.*
+3. **Auto-trigger collisions** — when two skills could plausibly fire on the same phrasing (e.g., "let's plan the next thing" — `/replan` or just generic next-stage selection?), how does the agent disambiguate? *Lean: defer to the most-specific description match; if tied, ask one clarifying question before acting.*
 
 ---
 
@@ -434,6 +437,7 @@ This PRD is approved when the user:
 
 ## 13. Revision Log
 
+- **2026-04-26 — C6 (skill package v0.6).** Closed open question Q3 (project-log size). `/roadmap` now switches to **roll-up mode** when the project-log reaches 500 lines OR 6 months. Roll-up keeps the recent half (last 30 days OR 50 entries, whichever covers more) verbatim and compresses the older half to one line per stage. Compression rules: shipped stages → shipped one-liner + optional decision/blocker counts; active/parked stages → last decision or note as one-liner; `note` entries dropped (counted only); matched `blocker`/`unblock` pairs counted; unmatched `blocker` becomes "open blocker:" suffix; most recent `replan` reason kept as footnote. Project-log itself stays append-only forever — roll-up is a render transformation, not a prune (per principle 4). `roadmap/SKILL.md` gains the size-handling section, both output-format variants, and the compression rules. `project-log/SKILL.md` session-start step 3 confirms tail-read (~20 entries) is the policy at any scale. `templates/project-log.md` "How it relates to other artifacts" mentions the roll-up threshold so users running long projects know what to expect. §9 reorganized: Q3 (renumbered post-C3) moved to "Resolved in skill package v0.6"; remaining open questions renumbered. Reason: long-running projects accumulate hundreds of milestone lines; reading the whole file every `/roadmap` would burn context for stakeholder summaries that only need recent + roll-up.
 - **2026-04-26 — C3 (skill package v0.5).** Closed open question Q3 (multi-repo handling). STATE.md template (`templates/STATE.md`) now ships a `**Repo root:**` header field. `/bootstrap` fills it on creation with `git rev-parse --show-toplevel`. Main `project-log/SKILL.md` session-start step 2 reads the field and hard-refuses (does not regenerate STATE, does not surface other state) when it mismatches the live `git rev-parse --show-toplevel`; missing field is a soft warning (backwards-compatible with pre-C3 STATE.md files). `/where`'s mismatch-pattern list grows two entries: **Wrong-repo refuse (HARD)** and **Missing Repo root field (SOFT)**. §9 reorganized: Q3 (renumbered post-C2) moved to "Resolved in skill package v0.5"; remaining open questions renumbered. Reason: prevent corrupting one repo's state by mistakenly reading another's `docs/local/` — false negatives here are catastrophic.
 - **2026-04-26 — C2 (skill package v0.4).** Closed open question Q3 (persistent agent memory for the skill). Added `memory/` directory to the skill structure (§6) with the 4-type taxonomy mirroring harness auto-memory: `user`, `feedback`, `project`, `reference`. Scaffold ships with the skill (README, _TEMPLATE, empty MEMORY.md header); personal entries are gitignored within the skill repo so they don't leak between installs. Main `project-log/SKILL.md` session-start now reads `memory/MEMORY.md` first, before STATE.md and the project-log tail. Added a "Memory" section to the SKILL.md describing the when-to-write rules, the when-NOT-to-write list, and the parallel relationship with harness auto-memory. §9 reorganized: Q3 moved to a new "Resolved in skill package v0.4" sub-section; remaining open questions renumbered. Reason: portability — skill should carry discipline-specific knowledge across sessions even on harnesses without their own memory layer.
 - **2026-04-26 — C4 (skill package v0.3).** Closed open question Q2 (maturity scale granularity). PRD template `templates/PRD.md` §7 now ships both scales explicitly: the 3-level default visible, the 5-level expansion in a commented block with "pick one" wording and switch-later instructions. §9 reorganized: Q2 moved to a new "Resolved in skill package v0.3" sub-section; remaining open questions renumbered and cross-referenced to their tracking stages (C2, C3, C5, C6). Reason: dogfood of the skill on its own repo surfaced that the template already had the 5-level option but the PRD said it was open; closing the loop.
@@ -442,4 +446,4 @@ This PRD is approved when the user:
 
 ---
 
-*End of PRD v1.1 / project-log v0.5.*
+*End of PRD v1.1 / project-log v0.6.*
